@@ -34,7 +34,7 @@ class BidEnv(gym.Env):
         return self.observation, self.reward, self.done, self.info
 
     def _populateObservation(self,action):
-        print(len(action))
+        #print(len(action))
         mr = self._data['marketrate']  # 电力市场状态
         q_Mon = self._data['q_Mon']
         Qd = self._data['Qd']
