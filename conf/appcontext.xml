@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	<bean id="datasource" class="utils.mysqldatasource.MysqlDataSource" initmethod="initialize">
+	    <property type="str" name="host" value="localhost"/>
+	    <property type="int" name="port" value="3306"/>
+	    <property type="str" name="user" value="root"/>
+	    <property type="str" name="password" value="root"/>
+	    <property type="str" name="database" value="electricity"/>
+		<property type="str" name="charset" value="utf8"/>
+	    <property type="int" name="maxconnections" value="3"/>
+	    <property type="int" name="mincached" value="1"/>
+	    <property type="int" name="maxcached" value="2"/>
+	</bean>
+	<bean id="bid" class="generatorbid.bidbean.BidBean" initmethod="">
+	    <property type="utils.datasource.DataSource" name="datasource" ref="datasource"/>
+	</bean>
+</beans>
