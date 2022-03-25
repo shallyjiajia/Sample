@@ -34,8 +34,9 @@ LR_C = 0.001    # learning rate for critic
 GLOBAL_RUNNING_R = []
 GLOBAL_EP = 0
 
-env = gym.make(GAME,data={'Qd': 70794, 'marketrate': 1.29, 'pmc': 0.3285, 'a': 0.088, 'b': 305, 'TMon': 744, 'q_YD': 12686, 'q_Mon': 5170})
+#env = gym.make(GAME,data={'Qd': 70794, 'marketrate': 1.29, 'pmc': 0.3285, 'a': 0.088, 'b': 305, 'TMon': 744, 'q_YD': 12686, 'q_Mon': 5170})
 COORD = tf.train.Coordinator()
+SESS = tf.Session()
 
 class ACNet(object):
     def __init__(self, OPT_A,OPT_C,env,scope, globalAC=None):
@@ -176,8 +177,9 @@ class Worker(object):
                     break
 
 if __name__ == "__main__":
-    SESS = tf.Session()
 
+    env = gym.make(GAME, data={'Qd': 70794, 'marketrate': 1.29, 'pmc': 0.3285, 'a': 0.088, 'b': 305, 'TMon': 744,
+                               'q_YD': 12686, 'q_Mon': 5170})
     with tf.device("/cpu:0"):
         OPT_A = tf.train.RMSPropOptimizer(LR_A, name='RMSPropA')
         OPT_C = tf.train.RMSPropOptimizer(LR_C, name='RMSPropC')
@@ -194,7 +196,7 @@ if __name__ == "__main__":
     # 所幸TensorFlow提供了两个类来帮助多线程的实现：tf.Coordinator和
     # tf.QueueRunner。从设计上这两个类必须被一起使用。Coordinator类可以用来同时停止多个工作线程并且向那个在等待所有工作线程终止的程序
     # 报告异常。QueueRunner类用来协调多个工作线程同时将多个张量推入同一个队列中。
-    COORD = tf.train.Coordinator()
+
     SESS.run(tf.global_variables_initializer())
 
     if OUTPUT_GRAPH:

@@ -6,7 +6,7 @@ import threading
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow.compat.v1 as tf
-from utils.RL.a3cconttest import ACNet,Worker
+from utils.RL.a3cconttest import ACNet,Worker,SESS,COORD,GLOBAL_RUNNING_R
 
 tf.disable_v2_behavior()
 
@@ -29,8 +29,6 @@ class A3CCont():
 
     def run(self,params):
         env = params['env']
-        SESS = tf.Session()
-
         with tf.device("/cpu:0"):
             OPT_A = tf.train.RMSPropOptimizer(self._LR_A, name='RMSPropA')
             OPT_C = tf.train.RMSPropOptimizer(self._LR_C, name='RMSPropC')
@@ -47,7 +45,6 @@ class A3CCont():
         # 所幸TensorFlow提供了两个类来帮助多线程的实现：tf.Coordinator和
         # tf.QueueRunner。从设计上这两个类必须被一起使用。Coordinator类可以用来同时停止多个工作线程并且向那个在等待所有工作线程终止的程序
         # 报告异常。QueueRunner类用来协调多个工作线程同时将多个张量推入同一个队列中。
-        COORD = tf.train.Coordinator()
         SESS.run(tf.global_variables_initializer())
 
         if self._OUTPUT_GRAPH:
@@ -64,7 +61,7 @@ class A3CCont():
         # 有了这个join的动作，就是所有的work动运行完了后，才进行下面的动作
         COORD.join(worker_threads)
 
-        plt.plot(np.arange(len(self._GLOBAL_RUNNING_R)), self._GLOBAL_RUNNING_R)
+        plt.plot(np.arange(len(GLOBAL_RUNNING_R)), GLOBAL_RUNNING_R)
         plt.xlabel('step')
         plt.ylabel('Total moving reward')
         plt.show()
