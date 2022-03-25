@@ -39,7 +39,7 @@ GLOBAL_EP = 0
 #env = gym.make(GAME,data={'Qd': 70794, 'marketrate': 1.29, 'pmc': 0.3285, 'a': 0.088, 'b': 305, 'TMon': 744, 'q_YD': 12686, 'q_Mon': 5170})
 COORD = tf.train.Coordinator()
 SESS = tf.Session()
-log = Logger(r'C:\Users\shally jia\Desktop\远光软件\Sample\logs\root.log')
+log = Logger(r'../logs/root.log')
 class ACNet(object):
     def __init__(self, OPT_A,OPT_C,env,scope, globalAC=None):
         self.env = env
