@@ -1,17 +1,13 @@
 import gym
 from gym import spaces
 import numpy as np
-from generatorbid.bidservice import BidService
 
 class BidEnv(gym.Env):
-    def __init__(self):
+    def __init__(self,data):
         self.done = 0
         self.reward = 0
         self.info="start"
-        self._data = {}
-
-        service = BidService()
-        self._data = service.getData()
+        self._data = data
 
         self.observation_space_name = np.array(['marketrate', 'generatorrate'])
         self.state_lb = [0, 0]
@@ -34,7 +30,7 @@ class BidEnv(gym.Env):
         return self.observation, self.reward, self.done, self.info
 
     def _populateObservation(self,action):
-        #print(len(action))
+        print(action)
         mr = self._data['marketrate']  # 电力市场状态
         q_Mon = self._data['q_Mon']
         Qd = self._data['Qd']
@@ -44,7 +40,7 @@ class BidEnv(gym.Env):
     def _populateReward(self,action):
         # 发电商月度集中竞价交易收益
         TMon = self._data['TMon']
-        q_Mon = self._data['q_Mon']
+        q_Mon = self._data['q_Mon']*action[0]
         q_YD = self._data['q_YD']
         a = self._data['a']
         b = self._data['b']
@@ -55,13 +51,16 @@ class BidEnv(gym.Env):
         return self.reward
 
     def _populateDone(self):
-        if self.reward>5000:
+        if self.reward>5:
             return 1
         else:
             return 0
 
     def _populateInfo(self):
         return "step"
+
+    def setData(self,data):
+        self._data = data
 
     def reset(self):
         self.observation = np.array([1.29, 0.012])  # initial state, current rates

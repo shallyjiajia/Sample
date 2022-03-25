@@ -62,36 +62,8 @@ class BidResourceMysql(BidResource):
 class BidResourceExcel(BidResource):
     def __init__(self):
         self._path =r'C:\Users\shally jia\Desktop\远光软件\Sample\data\data.xlsx'
-        self._gid=1
-        self._month=1
-    
+
     def getData(self):
-        bidRE = self.getResource()
-        data={}
-        # 市场需求电量
-        data['Qd'] = bidRE['市场需求电量-供需比-出清价格'].iloc[1, self._month]
-        # 供需比
-        data['marketrate'] = bidRE['市场需求电量-供需比-出清价格'].iloc[2, self._month]
-        # 出清价格
-        data['pmc'] = bidRE['市场需求电量-供需比-出清价格'].iloc[3, self._month]
-
-        # 发电系数
-        data['a'] = bidRE['发电商额定功率和发电系数'].iloc[self._gid, 2]
-        data['b'] = bidRE['发电商额定功率和发电系数'].iloc[self._gid, 3]
-        # data['c'] = bidRE['发电商额定功率和发电系数'].iloc[self._gid, 4]
-
-        # 月利用小时数
-        data['TMon'] = bidRE['发电商月利用小时数'].iloc[self._gid, self._month]
-
-        # 发电商月度分解电量
-        data['q_YD'] = bidRE['发电商月度基本发电计划'].iloc[self._gid, self._month]
-
-        # 发电商月度剩余发电量
-        data['q_Mon'] = bidRE['发电商月度剩余发电量'].iloc[self._gid, self._month]
-
-        return data
-
-    def getResource(self):
         data_xls = pd.ExcelFile(self._path)
         data={}
         for name in data_xls.sheet_names:

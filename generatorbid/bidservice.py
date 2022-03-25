@@ -1,18 +1,26 @@
-from utils.RL.test import A3C
+#from utils.RL.test import A3C
 from generatorbid.bid import Bid
-from generatorbid.bidresource import BidResourceExcel
 from utils.datasource import DataSource
 from dbutils.pooled_db import PooledDB
 import pymysql
+from utils.RL.a3ccont import A3CCont
+from utils.RL.test import A3C
+import gym
 
 class BidService():
     def __init__(self):
         # self.appcontext = None
         self.datasource = None
 
-    def getData(self):
-        bidre = BidResourceExcel()
-        return bidre.getData()
+    def service(self,gname,gdata):
+        env = gym.make(gname, data=gdata)
+
+        bid = Bid()
+        bid.strategy = A3CCont()
+        params = {"env": env}
+        bid.setParams(params)
+
+        return bid.run()
 
     def test(self):
         return self._internal(self.datasource)
@@ -22,13 +30,10 @@ class BidService():
         print(result)
 
         bid = Bid()
+        bid.strategy = A3C()
 
-        strategy = A3C()
         params = {"Param1": 1, "Param2": "Flop"}
-
-        bid.strategy = strategy
         bid.setParams(params)
-
         return bid.run()
 
     def toString(self):
