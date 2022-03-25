@@ -40,8 +40,9 @@ class TestBid():
         return data
 
 if __name__ == '__main__':
-    testbid = TestBid(1,1)
+    testbid = TestBid(3,3)
     gdata = testbid.getData()
+    #print(gdata)
     bidservice = BidService()
     bidservice.service('bidenv-v0',gdata)
 

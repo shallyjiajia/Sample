@@ -19,7 +19,9 @@ class BidEnv(gym.Env):
         self.action_ub = [1, 1.2]
         self.action_space = spaces.Box(np.array(self.action_lb), np.array(self.action_ub))
 
-        self.observation = np.array([1.29, 0.012])  # initial observation, current rates
+        mr = self._data['marketrate']  # 电力市场状态
+        gr =  self._data['q_Mon'] / self._data['Qd']  # 发电商自身状态
+        self.observation = np.array([mr, gr])  # initial observation, current rates
 
     def step(self, action):  # take action，return observation,reward,done,info
         self.observation = self._populateObservation(action)
@@ -30,7 +32,6 @@ class BidEnv(gym.Env):
         return self.observation, self.reward, self.done, self.info
 
     def _populateObservation(self,action):
-        print(action)
         mr = self._data['marketrate']  # 电力市场状态
         q_Mon = self._data['q_Mon']
         Qd = self._data['Qd']
@@ -63,7 +64,9 @@ class BidEnv(gym.Env):
         self._data = data
 
     def reset(self):
-        self.observation = np.array([1.29, 0.012])  # initial state, current rates
+        mr = self._data['marketrate']  # 电力市场状态
+        gr = self._data['q_Mon'] / self._data['Qd']  # 发电商自身状态
+        self.observation = np.array([mr, gr])  # initial state, current rates
         self.done = 0
         self.reward = 0
         self.info = "reset"

@@ -15,6 +15,7 @@ import gym
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow.compat.v1 as tf
+from utils.logger import Logger
 
 tf.disable_v2_behavior()
 
@@ -23,6 +24,7 @@ GAME = 'bidenv-v0'
 OUTPUT_GRAPH = True
 LOG_DIR = './log'
 N_WORKERS = multiprocessing.cpu_count()
+#N_WORKERS=1
 MAX_EP_STEP = 200
 MAX_GLOBAL_EP = 2000
 GLOBAL_NET_SCOPE = 'Global_Net'
@@ -37,7 +39,7 @@ GLOBAL_EP = 0
 #env = gym.make(GAME,data={'Qd': 70794, 'marketrate': 1.29, 'pmc': 0.3285, 'a': 0.088, 'b': 305, 'TMon': 744, 'q_YD': 12686, 'q_Mon': 5170})
 COORD = tf.train.Coordinator()
 SESS = tf.Session()
-
+log = Logger(r'C:\Users\shally jia\Desktop\远光软件\Sample\logs\root.log')
 class ACNet(object):
     def __init__(self, OPT_A,OPT_C,env,scope, globalAC=None):
         self.env = env
@@ -133,6 +135,11 @@ class Worker(object):
                 #     self.env.render()
                 a = self.AC.choose_action(s)
                 s_, r, done, info = self.env.step(a)
+                log.info(str(self.name)+',s='+str(s)+',a='+str(a))
+                log.info(str(self.name)
+                         +',s_='+str(s_)
+                         +',r='+str(r)
+                         +',done='+str(done))
                 done = True if ep_t == MAX_EP_STEP - 1 else False
 
                 ep_r += r
@@ -177,9 +184,7 @@ class Worker(object):
                     break
 
 if __name__ == "__main__":
-
-    env = gym.make(GAME, data={'Qd': 70794, 'marketrate': 1.29, 'pmc': 0.3285, 'a': 0.088, 'b': 305, 'TMon': 744,
-                               'q_YD': 12686, 'q_Mon': 5170})
+    env = gym.make(GAME, data={'Qd': 70794, 'marketrate': 1.29, 'pmc': 0.3285, 'a': 0.054, 'b': 281, 'TMon': 744, 'q_YD': 22773, 'q_Mon': 9963})
     with tf.device("/cpu:0"):
         OPT_A = tf.train.RMSPropOptimizer(LR_A, name='RMSPropA')
         OPT_C = tf.train.RMSPropOptimizer(LR_C, name='RMSPropC')
