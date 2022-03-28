@@ -13,7 +13,7 @@ class BidService():
         self.datasource = None
 
     def service(self,gname,gdata):
-        env = gym.make(gname, data=gdata)
+        env = gym.make(gname, env_config=gdata)
 
         bid = Bid()
         bid.strategy = A3CCont()
